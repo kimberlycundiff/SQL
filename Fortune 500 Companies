@@ -1,0 +1,43 @@
+Show which companies offer at least 8 weeks of maternity leave, and wether or not those companies offer healthcare benefits.
+
+SELECT company_name, maternity_leave_weeks,
+CASE WHEN healthcare_benefits=1 THEN "Yes"
+ELSE "No"
+END AS "benefits_offered"
+FROM fortune_companies
+WHERE maternity_leave_weeks>=8
+AND industry="Retail"
+ORDER BY maternity_leave_weeks desc;
+
+Show the average revenue of each industry, from greatest to least.
+
+SELECT industry, ROUND(AVG(revenue), 2) AS "avg_revenue"
+FROM fortune_companies
+GROUP BY industry
+ORDER BY avg_revenue desc;
+
+Show the average employee tenure of all companies that have at least 5000 employees and offer less than 25 days of paid time off.
+
+SELECT company_name, employees, paid_time_off_days, avg_employee_tenure
+FROM fortune_companies
+WHERE employees>=5000
+AND paid_time_off_days<25
+ORDER BY avg_employee_tenure desc;
+
+Show which industries have the highest employee tenure while maintaining a revenue of at least 200.
+
+SELECT industry, avg_employee_tenure, revenue
+FROM fortune_companies
+GROUP BY industry
+HAVING revenue>=200
+ORDER BY avg_employee_tenure desc;
+
+Show which companies with under 2000 employees offer healthcare benefits. Include the revenue of each company in descending order.
+
+SELECT company_name, employees, revenue,
+CASE WHEN healthcare_benefits=1 THEN "Yes"
+ELSE "No"
+END AS healthcare_benefits
+FROM fortune_companies
+WHERE employees<2000
+ORDER BY revenue desc;
