@@ -26,19 +26,17 @@ time_signature integer NOT NULL
 
 #Then I inserted the Spotify Data .csv into the table.
 
-#What is the average artist and track danceability?
+#What is the average track danceability?
 
-SELECT SUM(danceability)/COUNT(distinct artist_name) AS avg_artist_danceability
-,SUM(danceability)/COUNT(track_name) AS avg_track_danceability
+SELECT SUM(danceability)/COUNT(track_name) AS avg_track_danceability
 FROM BIT_DB.Spotifydata;
 
 #Who are the top 10 most popular artists?
 
-SELECT distinct artist_name
+SELECT artist_name, AVG(popularity) AS popularity
 FROM BIT_DB.Spotifydata
-GROUP BY artist_name 
-HAVING AVG(popularity)>1
-ORDER BY AVG(popularity) desc
+GROUP BY artist_name
+ORDER BY popularity desc
 LIMIT 10;
 
 #What artist released the longest song, and what is the name of the song?
