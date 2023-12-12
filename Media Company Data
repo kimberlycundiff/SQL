@@ -1,0 +1,69 @@
+For this project, I downloaded data about a media compnay, and came up with relevant questions to answer about the data utilizing SQL!
+
+#How many employees were hired in Calgary in 2003?
+
+SELECT COUNT(employeeid)
+FROM CHINOOK.employees
+WHERE city='Calgary'
+AND hiredate like '%2003%';
+
+#Show all customers assigned to Margaret Park (employee id 4)
+
+SELECT customer.customerid
+, customer.firstname AS customerfirst
+, customer.lastname AS customerlast
+, employee.firstname AS employeefirst
+, employee.lastname AS employeelast
+FROM chinook.customers customer
+LEFT JOIN chinook.employees employee
+ON customer.supportrepid=employee.employeeid
+WHERE employee.employeeid=4;
+
+#Which genre has generated the most revenue, and what is the total revenue?
+
+SELECT genre.name, SUM(pay.unitprice*pay.quantity) AS revenue
+FROM chinook.genres genre
+JOIN chinook.tracks track
+ON genre.genreid=track.genreid
+JOIN chinook.invoice_items pay
+ON track.trackid=pay.trackid
+GROUP BY genre.name
+ORDER BY revenue desc
+LIMIT 1;
+
+#Which playlist has the most tracks?
+
+SELECT playlistid, COUNT(trackid) AS tracks
+FROM chinook.playlist_track
+ORDER BY COUNT(trackid) DESC
+LIMIT 1;
+
+#List the names and emails of all customers from the U.S.
+
+SELECT firstname, lastname, email
+FROM chinook.customers
+WHERE country='USA';
+
+#Show the Invoice Total, Customer name, Country, and Sales Agent name for all invoices and customers.
+
+SELECT emp.LastName, emp.Firstname, cust.FirstName, cust.LastName, cust.Country, inv.total
+FROM chinook.employees emp 
+JOIN chinook.Customers cust ON cust.SupportRepId = emp.EmployeeId
+JOIN chinook.Invoices Inv ON Inv.CustomerId = cust.CustomerId;
+
+#Which sales agent made the most dollars in sales in 2009?
+
+SELECT emp.FirstName, emp.LastName,
+ROUND(SUM(Inv.Total), 2) as 'Total Sales' 
+FROM chinook.Employees emp
+
+JOIN chinook.Customers cust 
+ON cust.SupportRepId = emp.EmployeeId
+
+JOIN chinook.Invoices Inv 
+ON Inv.CustomerId = cust.CustomerId
+
+WHERE emp.Title = 'Sales Support Agent' 
+AND Inv.InvoiceDate LIKE '2009%' 
+GROUP BY emp.FirstName
+ORDER BY (round(sum(Inv.Total), 2))  DESC LIMIT 1;
